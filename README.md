@@ -105,7 +105,7 @@ smart-fire-fighting-iot/
 │
 └── docs/
     ├── block-diagram.png
-    ├──block-diagram.png
+    ├── dashboard-screenshot.png
     └── demo.mp4
 
 ```
@@ -163,7 +163,7 @@ This log is intended to help the facility's safety team identify recurring probl
 
 - Block diagram: [View Block Diagram](docs/block-diagram.png)
 - Demo video: [Watch Demo Video](docs/demo.mp4)
-- Dashboard screenshots: [View Dashboard Screenshots](docs/dashboard/)
+- Dashboard screenshots: [View Dashboard Screenshots](dashboard-screenshot.png)
 
 ---
 
