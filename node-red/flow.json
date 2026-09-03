@@ -1,0 +1,479 @@
+[
+    {
+        "id": "flow_fire_system",
+        "type": "tab",
+        "label": "Fire System",
+        "disabled": false,
+        "info": "Smart Fire Fighting IoT System - Central Dashboard"
+    },
+    {
+        "id": "mqtt_in_telemetry",
+        "type": "mqtt in",
+        "z": "flow_fire_system",
+        "name": "Telemetry (all zones)",
+        "topic": "factory/+/telemetry",
+        "qos": "1",
+        "datatype": "utf8",
+        "broker": "broker_hivemq",
+        "inputs": 0,
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "fn_parse_telemetry"
+            ]
+        ]
+    },
+    {
+        "id": "fn_parse_telemetry",
+        "type": "function",
+        "z": "flow_fire_system",
+        "name": "parse telemetry JSON",
+        "func": "try {\n    const data = JSON.parse(msg.payload);\n    msg.payload = data;\n    msg.zone = data.zone;\n    return msg;\n} catch (e) {\n    node.warn('Bad telemetry JSON: ' + msg.payload);\n    return null;\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "switch_zone_telemetry"
+            ]
+        ]
+    },
+    {
+        "id": "switch_zone_telemetry",
+        "type": "switch",
+        "z": "flow_fire_system",
+        "name": "route by zone",
+        "property": "zone",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "zone1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "zone2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "zone3",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 580,
+        "y": 180,
+        "wires": [
+            [
+                "gauge_temp_zone1",
+                "text_flame_zone1"
+            ],
+            [
+                "gauge_temp_zone2",
+                "text_flame_zone2"
+            ],
+            [
+                "9dd9f6c0ecfdc15c",
+                "4ddebcc1a842edf6"
+            ]
+        ]
+    },
+    {
+        "id": "gauge_temp_zone1",
+        "type": "ui_gauge",
+        "z": "flow_fire_system",
+        "name": "Zone 1 Temperature",
+        "group": "grp_zone1",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Zone 1 - Temp",
+        "label": "°C",
+        "format": "{{msg.payload.temperature}}",
+        "min": "0",
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "35",
+        "seg2": "70",
+        "diff": false,
+        "className": "",
+        "x": 840,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "text_flame_zone1",
+        "type": "ui_text",
+        "z": "flow_fire_system",
+        "group": "grp_zone1",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Zone 1 Flame",
+        "label": "Flame Detected",
+        "format": "{{msg.payload.flame}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 820,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "gauge_temp_zone2",
+        "type": "ui_gauge",
+        "z": "flow_fire_system",
+        "name": "Zone 2 Temperature",
+        "group": "grp_zone2",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Zone 2 - Temp",
+        "label": "°C",
+        "format": "{{msg.payload.temperature}}",
+        "min": "0",
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "35",
+        "seg2": "70",
+        "diff": false,
+        "className": "",
+        "x": 840,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "text_flame_zone2",
+        "type": "ui_text",
+        "z": "flow_fire_system",
+        "group": "grp_zone2",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Zone 2 Flame",
+        "label": "Flame Detected",
+        "format": "{{msg.payload.flame}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 820,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "mqtt_in_alert",
+        "type": "mqtt in",
+        "z": "flow_fire_system",
+        "name": "Alerts (all zones)",
+        "topic": "factory/+/alert",
+        "qos": "1",
+        "datatype": "utf8",
+        "broker": "broker_hivemq",
+        "inputs": 0,
+        "x": 80,
+        "y": 600,
+        "wires": [
+            [
+                "fn_parse_alert"
+            ]
+        ]
+    },
+    {
+        "id": "fn_parse_alert",
+        "type": "function",
+        "z": "flow_fire_system",
+        "name": "parse alert JSON",
+        "func": "try {\n    const data = JSON.parse(msg.payload);\n    msg.payload = data;\n    return msg;\n} catch (e) {\n    node.warn('Bad alert JSON: ' + msg.payload);\n    return null;\n}",
+        "outputs": 1,
+        "x": 310,
+        "y": 600,
+        "wires": [
+            [
+                "switch_event"
+            ]
+        ]
+    },
+    {
+        "id": "switch_event",
+        "type": "switch",
+        "z": "flow_fire_system",
+        "name": "fire_detected vs cleared",
+        "property": "payload.event",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "fire_detected",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "fire_cleared",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 550,
+        "y": 600,
+        "wires": [
+            [
+                "fn_format_notify_fire",
+                "fn_format_csv_row"
+            ],
+            [
+                "fn_format_notify_clear"
+            ]
+        ]
+    },
+    {
+        "id": "fn_format_notify_fire",
+        "type": "function",
+        "z": "flow_fire_system",
+        "name": "format fire notification",
+        "func": "msg.payload = '🔥 FIRE DETECTED in ' + msg.payload.zone + ' at ' + new Date(msg.payload.timestamp * 1000).toLocaleTimeString();\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 540,
+        "wires": [
+            [
+                "ui_notify_fire"
+            ]
+        ]
+    },
+    {
+        "id": "ui_notify_fire",
+        "type": "ui_toast",
+        "z": "flow_fire_system",
+        "position": "top right",
+        "displayTime": "20",
+        "highlight": "#ca3838",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "Fire Alert",
+        "name": "Fire Notification",
+        "x": 1080,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "fn_format_csv_row",
+        "type": "function",
+        "z": "flow_fire_system",
+        "name": "format CSV row (for analytics)",
+        "func": "const d = msg.payload;\nconst row = [\n    d.zone,\n    d.event,\n    d.flame,\n    d.temperature,\n    d.timestamp,\n    new Date(d.timestamp * 1000).toISOString()\n].join(',') + '\\n';\nmsg.payload = row;\nreturn msg;",
+        "outputs": 1,
+        "x": 830,
+        "y": 580,
+        "wires": [
+            [
+                "file_log_events"
+            ]
+        ]
+    },
+    {
+        "id": "file_log_events",
+        "type": "file",
+        "z": "flow_fire_system",
+        "name": "fire_events.csv",
+        "filename": "fire_events.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1080,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fn_format_notify_clear",
+        "type": "function",
+        "z": "flow_fire_system",
+        "name": "format clear notification",
+        "func": "msg.payload = '✅ Fire cleared in ' + msg.payload.zone;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 640,
+        "wires": [
+            [
+                "ui_notify_clear"
+            ]
+        ]
+    },
+    {
+        "id": "ui_notify_clear",
+        "type": "ui_toast",
+        "z": "flow_fire_system",
+        "position": "top right",
+        "displayTime": "6",
+        "highlight": "#00b500",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "Fire Cleared",
+        "name": "Clear Notification",
+        "x": 1090,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "9dd9f6c0ecfdc15c",
+        "type": "ui_gauge",
+        "z": "flow_fire_system",
+        "name": "Zone 3 Temperature",
+        "group": "2e3d38ec5f8b1fad",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Zone 3 - Temp",
+        "label": "°C",
+        "format": "{{msg.payload.temperature}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "35",
+        "seg2": "70",
+        "diff": false,
+        "className": "",
+        "x": 840,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "4ddebcc1a842edf6",
+        "type": "ui_text",
+        "z": "flow_fire_system",
+        "group": "2e3d38ec5f8b1fad",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Zone 3 Flame",
+        "label": "Flame Detected",
+        "format": "{{msg.payload.flame}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 820,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "broker_hivemq",
+        "type": "mqtt-broker",
+        "name": "HiveMQ Broker",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthQos": "0",
+        "willQos": "0"
+    },
+    {
+        "id": "grp_zone1",
+        "type": "ui_group",
+        "name": "Zone 1",
+        "tab": "ui_tab_fire",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "grp_zone2",
+        "type": "ui_group",
+        "name": "Zone 2",
+        "tab": "ui_tab_fire",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "2e3d38ec5f8b1fad",
+        "type": "ui_group",
+        "name": " Zone 3",
+        "tab": "ui_tab_fire",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ui_tab_fire",
+        "type": "ui_tab",
+        "name": "Fire Monitoring",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "e2e4b5ae59f8f782",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
