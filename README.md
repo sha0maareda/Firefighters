@@ -161,7 +161,7 @@ This log is intended to help the facility's safety team identify recurring probl
 ## 🎥 Demo
 
 - Block diagram: [View Block Diagram](docs/block-diagram.png)
-- Demo video: [Watch Demo Video](docs/demo.mp4)
+- Demo video: [Watch Demo Video](https://drive.google.com/file/d/10AXsdrt1k-fbodUw4iwGFz2-d2MzZroV/view?usp=sharing)
 - Dashboard screenshots: [View Dashboard Screenshots](docs/dashboard-screenshot.png)
 
 ---
