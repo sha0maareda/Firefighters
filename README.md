@@ -105,8 +105,7 @@ smart-fire-fighting-iot/
 │
 └── docs/
     ├── block-diagram.png
-    ├── dashboard-screenshot.png
-    └── demo.mp4
+    └── dashboard-screenshot.png
 
 ```
 
