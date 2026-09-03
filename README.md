@@ -105,8 +105,7 @@ smart-fire-fighting-iot/
 │
 └── docs/
     ├── block-diagram.png
-    └── demo/
-        └── demo-video-or-gif.md
+    └── demo.mp4
 ```
 
 > All three zone firmware files are identical except for `ZONE_ID`, `NEIGHBOR_ZONES`, and the MQTT client ID — kept as separate files under `firmware/zoneX/` since each runs on a physically separate ESP32 board.
