@@ -78,26 +78,31 @@ The facility is divided into multiple **zones**. Each zone has its own embedded 
 
 ```
 smart-fire-fighting-iot/
+│
 ├── README.md
-├── firmware/
+│
+├── zones/
 │   ├── zone1/
-│   │   └── main.py
-│   ├── zone2/
-│   │   └── main.py
-│   └── zone3/
-│       └── main.py
-├── node-red/
-│   └── flow.json              # exported Node-RED flow (dashboard + alerts + logging)
-├── wokwi/
-│   ├── zone1/
+│   │   ├── main.py
 │   │   ├── diagram.json
 │   │   └── wokwi-project.txt
+│   │
 │   ├── zone2/
-│   │   └── ...
+│   │   ├── main.py
+│   │   ├── diagram.json
+│   │   └── wokwi-project.txt
+│   │
 │   └── zone3/
-│       └── ...
+│       ├── main.py
+│       ├── diagram.json
+│       └── wokwi-project.txt
+│
+├── node-red/
+│   └── flow.json
+│
 ├── data/
-│   └── fire_events.csv        # sample logged data (for analytics)
+│   └── fire_events.csv
+│
 └── docs/
     ├── block-diagram.png
     └── demo/
@@ -174,8 +179,12 @@ This log is intended to help the facility's safety team identify recurring probl
 
 ## 👥 Contributors
 
-- *Your name(s) here*
+- Alshaimaa Reda
+- Malak Moataz
+- Ahmed Tamer
+- Mohamed Emad
+- Saif El Tahewy
 
 ## 📄 License
 
-*Add a license here (e.g. MIT) if this is an open academic/portfolio project.*
+This project is licensed under the [MIT License](LICENSE).
